@@ -18,6 +18,7 @@ export type DetectionResponse = {
   Nodules: Array<Nodule>
   raw_image_url: string
   annotated_image_url: string
+  true_labels_url: string | null
 }
 
 export type HTTPValidationError = {

@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   Box,
   Card,
-  color,
   Container,
   Text,
   Button,
@@ -84,8 +83,14 @@ function Detect() {
                       <Image src={detection.annotated_image_url}></Image>
                     </div>
                     <div>
-                      <Text align={"center"}>标注图片</Text>
-                      <Image src={detection.annotated_image_url}></Image>
+                      <Text align={"center"}>真实标注图片</Text>
+                      {
+                        detection.true_labels_url ? (
+                          <Image src={detection.true_labels_url}></Image>
+                        ) : (
+                          <Text>无真实标注</Text>
+                        )
+                      }
                     </div>
                   </Flex>
                 </Box>

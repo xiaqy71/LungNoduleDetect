@@ -7,6 +7,7 @@ from sqlmodel import func, select
 import aioredis
 from app.core.config import settings
 from app.api.deps import CurrentUser, SessionDep
+from app.core.cache import calculate_md5
 from app.detector import Detector
 from app.utils import upload_file, generate_presigned_url
 from app.models import MinioBucket, DetectionResponse
@@ -51,15 +52,18 @@ async def detect_image(
     # 预测
     try:
         detections = detector.detect(temp_file_path)
+        truelabel_file_name = await redis.get(calculate_md5(temp_file_path))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
         os.remove(temp_file_path)
-
+    if truelabel_file_name:
+        true_labels_url = generate_presigned_url(MinioBucket.TRUELABELS, truelabel_file_name)
     return DetectionResponse(
         raw_image_url=generate_presigned_url(MinioBucket.UPLOAD, unique_filename),
         annotated_image_url=generate_presigned_url(
             MinioBucket.ANNOTATED, unique_filename.replace(".png", "_annotated.png")
         ),
+        true_labels_url=true_labels_url,
         **detections,
     )

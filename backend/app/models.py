@@ -117,6 +117,7 @@ class NewPassword(SQLModel):
 class MinioBucket(Enum):
     UPLOAD: str = "upload"
     ANNOTATED: str = "annotated"
+    TRUELABELS: str = "truelabels"
 
 class Nodule(SQLModel):
     x: float
@@ -132,3 +133,4 @@ class Detection(SQLModel):
 class DetectionResponse(Detection):
     raw_image_url: str
     annotated_image_url: str
+    true_labels_url: str | None
