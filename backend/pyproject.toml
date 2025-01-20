@@ -23,6 +23,8 @@ dependencies = [
     "pyjwt<3.0.0,>=2.8.0",
     "ultralytics>=8.3.63",
     "minio>=7.2.15",
+    "aioredis>=2.0.1",
+    "dependency-injector>=4.45.0",
 ]
 
 [tool.uv]
