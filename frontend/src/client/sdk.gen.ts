@@ -4,6 +4,8 @@ import type { CancelablePromise } from "./core/CancelablePromise"
 import { OpenAPI } from "./core/OpenAPI"
 import { request as __request } from "./core/request"
 import type {
+  DetectionDetectImageData,
+  DetectionDetectImageResponse,
   ItemsReadItemsData,
   ItemsReadItemsResponse,
   ItemsCreateItemData,
@@ -23,6 +25,8 @@ import type {
   LoginResetPasswordResponse,
   LoginRecoverPasswordHtmlContentData,
   LoginRecoverPasswordHtmlContentResponse,
+  PrivateCreateUserData,
+  PrivateCreateUserResponse,
   UsersReadUsersData,
   UsersReadUsersResponse,
   UsersCreateUserData,
@@ -45,6 +49,29 @@ import type {
   UtilsTestEmailResponse,
   UtilsHealthCheckResponse,
 } from "./types.gen"
+
+export class DetectionService {
+  /**
+   * Detect Image
+   * @param data The data for the request.
+   * @param data.formData
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static detectImage(
+    data: DetectionDetectImageData,
+  ): CancelablePromise<DetectionDetectImageResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/detect",
+      formData: data.formData,
+      mediaType: "multipart/form-data",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
 
 export class ItemsService {
   /**
@@ -265,6 +292,30 @@ export class LoginService {
       path: {
         email: data.email,
       },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class PrivateService {
+  /**
+   * Create User
+   * Create a new user.
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns UserPublic Successful Response
+   * @throws ApiError
+   */
+  public static createUser(
+    data: PrivateCreateUserData,
+  ): CancelablePromise<PrivateCreateUserResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/private/users/",
+      body: data.requestBody,
+      mediaType: "application/json",
       errors: {
         422: "Validation Error",
       },

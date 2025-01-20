@@ -1,6 +1,7 @@
 import secrets
 import warnings
 from typing import Annotated, Any, Literal
+from pathlib import Path
 
 from pydantic import (
     AnyUrl,
@@ -30,6 +31,9 @@ class Settings(BaseSettings):
         env_ignore_empty=True,
         extra="ignore",
     )
+    
+    BASE_DIR: str = str(Path(__file__).resolve().parent.parent)
+    
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
     # 60 minutes * 24 hours * 8 days = 8 days
@@ -117,6 +121,11 @@ class Settings(BaseSettings):
         )
 
         return self
+    
+    MINIO_ROOT_USER: str
+    MINIO_ROOT_PASSWORD: str
+    MINIO_HOST: str = "localhost"
+    MINIO_PORT: int = 9000
 
 
 settings = Settings()  # type: ignore

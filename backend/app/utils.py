@@ -12,6 +12,9 @@ from jwt.exceptions import InvalidTokenError
 from app.core import security
 from app.core.config import settings
 
+from minio import Minio
+from app.models import MinioBucket
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -121,3 +124,44 @@ def verify_password_reset_token(token: str) -> str | None:
         return str(decoded_token["sub"])
     except InvalidTokenError:
         return None
+
+
+# 创建一个MinioClient对象
+minio_client = Minio(
+    settings.MINIO_HOST + ":" + str(settings.MINIO_PORT),
+    access_key=settings.MINIO_ROOT_USER,
+    secret_key=settings.MINIO_ROOT_PASSWORD,
+    secure=False,
+)
+
+# 检查bucket是否存在，如果不存在则创建
+def ensure_bucket_exists(bucket: MinioBucket) -> None:
+    if not minio_client.bucket_exists(bucket.value):
+        try:
+            minio_client.make_bucket(bucket.value)
+        except Exception as e:
+            logger.error(f"Error creating bucket {bucket.value}: {e}")
+    else:
+        return
+    
+# 上传文件
+def upload_file(file_path: str, bucket: MinioBucket, object_name: str) -> None:
+    ensure_bucket_exists(bucket)
+    try:
+        minio_client.fput_object(bucket.value, object_name, file_path)
+    except Exception as e:
+        logger.error(f"Error uploading file {file_path} to bucket {bucket.value}: {e}")
+
+# 生成url
+def generate_presigned_url(bucket: MinioBucket, file_name: str, expires: int=3600) -> str:
+    try:
+        url = minio_client.get_presigned_url(
+            "GET",
+            bucket.value,
+            file_name,
+            timedelta(seconds=expires),
+        )
+    except Exception as e:
+        logger.error(f"Error generating presigned url for file {file_name}: {e}")
+        return ""
+    return url
