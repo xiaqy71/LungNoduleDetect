@@ -55,7 +55,7 @@ export class DetectionService {
    * Detect Image
    * @param data The data for the request.
    * @param data.formData
-   * @returns unknown Successful Response
+   * @returns DetectionResponse Successful Response
    * @throws ApiError
    */
   public static detectImage(

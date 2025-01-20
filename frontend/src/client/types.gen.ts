@@ -13,6 +13,13 @@ export type Body_login_login_access_token = {
   client_secret?: string | null
 }
 
+export type DetectionResponse = {
+  Speed: number
+  Nodules: Array<Nodule>
+  raw_image_url: string
+  annotated_image_url: string
+}
+
 export type HTTPValidationError = {
   detail?: Array<ValidationError>
 }
@@ -46,6 +53,14 @@ export type Message = {
 export type NewPassword = {
   token: string
   new_password: string
+}
+
+export type Nodule = {
+  x: number
+  y: number
+  width: number
+  height: number
+  confidence: number
 }
 
 export type PrivateUserCreate = {
@@ -115,7 +130,7 @@ export type DetectionDetectImageData = {
   formData: Body_detection_detect_image
 }
 
-export type DetectionDetectImageResponse = unknown
+export type DetectionDetectImageResponse = DetectionResponse
 
 export type ItemsReadItemsData = {
   limit?: number

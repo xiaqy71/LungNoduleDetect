@@ -9,7 +9,7 @@ from app.core.config import settings
 from app.api.deps import CurrentUser, SessionDep
 from app.detector import Detector
 from app.utils import upload_file, generate_presigned_url
-from app.models import MinioBucket
+from app.models import MinioBucket, DetectionResponse
 from contextlib import asynccontextmanager
 
 detector: Detector | None = None
@@ -28,7 +28,7 @@ async def lifespan(app: APIRouter):
 router = APIRouter(tags=["detection"], lifespan=lifespan)
 
 
-@router.post("/detect")
+@router.post("/detect", response_model=DetectionResponse)
 def detect_image(
     session: SessionDep, current_user: CurrentUser, file: UploadFile = File(...)
 ):
@@ -52,4 +52,8 @@ def detect_image(
         os.remove(temp_file_path)
     
     
-    return {"detections": detections}
+    return DetectionResponse(
+        raw_image_url=generate_presigned_url(MinioBucket.UPLOAD, unique_filename),
+        annotated_image_url=generate_presigned_url(MinioBucket.ANNOTATED, unique_filename.replace(".png", "_annotated.png")),
+        **detections
+    )

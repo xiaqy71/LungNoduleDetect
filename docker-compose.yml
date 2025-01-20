@@ -82,6 +82,9 @@ services:
       - traefik-public
       - default
     depends_on:
+      redis:
+        condition: service_healthy
+        restart: true
       minio:
         condition: service_healthy
         restart: true
@@ -190,10 +193,27 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
-    
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - traefik-public
+      - default
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - redis-data:/data
 volumes:
   app-db-data:
   minio-data:
+  redis-data:
 networks:
   traefik-public:
     # Allow setting it to false for testing

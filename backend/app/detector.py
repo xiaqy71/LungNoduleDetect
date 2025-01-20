@@ -1,7 +1,7 @@
 import os.path
 from ultralytics import YOLO
 from app.core.config import settings
-from app.models import MinioBucket
+from app.models import MinioBucket, Detection
 from app.utils import upload_file, generate_presigned_url
 
 
@@ -15,7 +15,7 @@ class Detector:
             raise FileNotFoundError(f"Model file not found: {model_path}")
         self.model = YOLO(model_path)
 
-    def detect(self, image_path: str) -> dict:
+    def detect(self, image_path: str) -> Detection:
 
         if not os.path.exists(image_path):
             raise FileNotFoundError(f"Image file not found: {image_path}")
