@@ -21,6 +21,21 @@ export type DetectionResponse = {
   true_labels_url: string | null
 }
 
+export type HistoriesPublic = {
+  data: Array<HistoryPublic>
+  count: number
+}
+
+export type HistoryPublic = {
+  id: string
+  owner_id: string
+  raw_image_url: string
+  annotated_image_url: string
+  true_labels_url: string | null
+  timestamp: string
+  detections: string
+}
+
 export type HTTPValidationError = {
   detail?: Array<ValidationError>
 }
@@ -132,6 +147,25 @@ export type DetectionDetectImageData = {
 }
 
 export type DetectionDetectImageResponse = DetectionResponse
+
+export type HistoriesReadHistoriesData = {
+  limit?: number
+  skip?: number
+}
+
+export type HistoriesReadHistoriesResponse = HistoriesPublic
+
+export type HistoriesReadHistoryData = {
+  id: string
+}
+
+export type HistoriesReadHistoryResponse = HistoryPublic
+
+export type HistoriesDeleteHistoryData = {
+  id: string
+}
+
+export type HistoriesDeleteHistoryResponse = Message
 
 export type ItemsReadItemsData = {
   limit?: number

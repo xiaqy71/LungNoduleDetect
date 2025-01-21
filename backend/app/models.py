@@ -2,8 +2,9 @@ import uuid
 
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
-
+from datetime import datetime
 from enum import Enum
+
 
 # Shared properties
 class UserBase(SQLModel):
@@ -45,7 +46,7 @@ class User(UserBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     hashed_password: str
     items: list["Item"] = Relationship(back_populates="owner", cascade_delete=True)
-
+    histories: list["History"] = Relationship(back_populates="owner", cascade_delete=True)
 
 # Properties to return via API, id is always required
 class UserPublic(UserBase):
@@ -114,10 +115,12 @@ class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=40)
 
+
 class MinioBucket(Enum):
     UPLOAD: str = "upload"
     ANNOTATED: str = "annotated"
     TRUELABELS: str = "truelabels"
+
 
 class Nodule(SQLModel):
     x: float
@@ -126,11 +129,48 @@ class Nodule(SQLModel):
     height: float
     confidence: float
 
+
 class Detection(SQLModel):
     Speed: float
     Nodules: list[Nodule]
-    
+
+
 class DetectionResponse(Detection):
     raw_image_url: str
     annotated_image_url: str
     true_labels_url: str | None
+
+
+class HistoryBase(SQLModel):
+    raw_image: str
+    annotated_image: str
+    true_labels: str | None = None
+    timestamp: datetime
+    detections: str
+
+
+class HistoryCreate(HistoryBase):
+    pass
+
+
+class History(HistoryBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    owner_id: uuid.UUID = Field(
+        foreign_key="user.id", nullable=False, ondelete="CASCADE"
+    )
+    owner: User | None = Relationship(back_populates="histories")
+
+
+class HistoryPublic(SQLModel):
+    id: uuid.UUID
+    owner_id: uuid.UUID
+    raw_image_url: str
+    annotated_image_url: str
+    true_labels_url: str | None
+    timestamp: datetime
+    detections: str
+
+
+class HistoriesPublic(SQLModel):
+    data: list[HistoryPublic]
+    count: int

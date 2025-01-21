@@ -23,6 +23,7 @@ from app.models import (
     UsersPublic,
     UserUpdate,
     UserUpdateMe,
+    History
 )
 from app.utils import generate_new_account_email, send_email
 
@@ -136,6 +137,8 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
         )
     statement = delete(Item).where(col(Item.owner_id) == current_user.id)
     session.exec(statement)  # type: ignore
+    statement = delete(History).where(col(History.owner_id) == current_user.id)
+    session.exec(statement)
     session.delete(current_user)
     session.commit()
     return Message(message="User deleted successfully")
@@ -223,6 +226,8 @@ def delete_user(
         )
     statement = delete(Item).where(col(Item.owner_id) == user_id)
     session.exec(statement)  # type: ignore
+    statement = delete(History).where(col(History.owner_id) == user_id)
+    session.exec(statement)
     session.delete(user)
     session.commit()
     return Message(message="User deleted successfully")

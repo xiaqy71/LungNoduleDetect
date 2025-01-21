@@ -53,6 +53,12 @@ services:
       db:
         condition: service_healthy
         restart: true
+      minio:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
+        restart: true
     command: bash scripts/prestart.sh
     env_file:
       - .env
@@ -74,6 +80,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
       - SENTRY_DSN=${SENTRY_DSN}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER?Variable not set}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD?Variable not set}
 
   backend:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'

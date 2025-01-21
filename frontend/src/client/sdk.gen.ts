@@ -6,6 +6,12 @@ import { request as __request } from "./core/request"
 import type {
   DetectionDetectImageData,
   DetectionDetectImageResponse,
+  HistoriesReadHistoriesData,
+  HistoriesReadHistoriesResponse,
+  HistoriesReadHistoryData,
+  HistoriesReadHistoryResponse,
+  HistoriesDeleteHistoryData,
+  HistoriesDeleteHistoryResponse,
   ItemsReadItemsData,
   ItemsReadItemsResponse,
   ItemsCreateItemData,
@@ -66,6 +72,76 @@ export class DetectionService {
       url: "/api/v1/detect",
       formData: data.formData,
       mediaType: "multipart/form-data",
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+}
+
+export class HistoriesService {
+  /**
+   * Read Histories
+   * @param data The data for the request.
+   * @param data.skip
+   * @param data.limit
+   * @returns HistoriesPublic Successful Response
+   * @throws ApiError
+   */
+  public static readHistories(
+    data: HistoriesReadHistoriesData = {},
+  ): CancelablePromise<HistoriesReadHistoriesResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/histories/",
+      query: {
+        skip: data.skip,
+        limit: data.limit,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Read History
+   * @param data The data for the request.
+   * @param data.id
+   * @returns HistoryPublic Successful Response
+   * @throws ApiError
+   */
+  public static readHistory(
+    data: HistoriesReadHistoryData,
+  ): CancelablePromise<HistoriesReadHistoryResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/histories/{id}",
+      path: {
+        id: data.id,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    })
+  }
+
+  /**
+   * Delete History
+   * @param data The data for the request.
+   * @param data.id
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+  public static deleteHistory(
+    data: HistoriesDeleteHistoryData,
+  ): CancelablePromise<HistoriesDeleteHistoryResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/v1/histories/{id}",
+      path: {
+        id: data.id,
+      },
       errors: {
         422: "Validation Error",
       },
