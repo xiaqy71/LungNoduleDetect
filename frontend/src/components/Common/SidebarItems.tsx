@@ -5,11 +5,11 @@ import { FiHome, FiSettings, FiUsers, FiUploadCloud, FiRotateCcw } from "react-i
 import type { UserPublic } from "../../client"
 
 const items = [
-  { icon: FiHome, title: "Dashboard", path: "/" },
-  { icon: FiUploadCloud, title: "detect", path: "/detect" },
-  { icon: FiRotateCcw, title: "Histories", path: "/histories" },
+  { icon: FiHome, title: "仪表盘", path: "/" },
+  { icon: FiUploadCloud, title: "检测", path: "/detect" },
+  { icon: FiRotateCcw, title: "检测历史", path: "/histories" },
   // { icon: FiBriefcase, title: "Items", path: "/items" },
-  { icon: FiSettings, title: "User Settings", path: "/settings" },
+  { icon: FiSettings, title: "用户设置", path: "/settings" },
 ]
 
 interface SidebarItemsProps {
@@ -23,7 +23,7 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"])
 
   const finalItems = currentUser?.is_superuser
-    ? [...items, { icon: FiUsers, title: "Admin", path: "/admin" }]
+    ? [...items, { icon: FiUsers, title: "管理员", path: "/admin" }]
     : items
 
   const listItems = finalItems.map(({ icon, title, path }) => (

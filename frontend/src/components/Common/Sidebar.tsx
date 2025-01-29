@@ -7,31 +7,30 @@ import {
   DrawerOverlay,
   Flex,
   IconButton,
-  Image,
+  Heading,
   Text,
   useColorModeValue,
   useDisclosure,
-} from "@chakra-ui/react"
-import { useQueryClient } from "@tanstack/react-query"
-import { FiLogOut, FiMenu } from "react-icons/fi"
+} from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { FiLogOut, FiMenu } from "react-icons/fi";
 
-import Logo from "/assets/images/fastapi-logo.svg"
-import type { UserPublic } from "../../client"
-import useAuth from "../../hooks/useAuth"
-import SidebarItems from "./SidebarItems"
+import type { UserPublic } from "../../client";
+import useAuth from "../../hooks/useAuth";
+import SidebarItems from "./SidebarItems";
 
 const Sidebar = () => {
-  const queryClient = useQueryClient()
-  const bgColor = useColorModeValue("ui.light", "ui.dark")
-  const textColor = useColorModeValue("ui.dark", "ui.light")
-  const secBgColor = useColorModeValue("ui.secondary", "ui.darkSlate")
-  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"])
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { logout } = useAuth()
+  const queryClient = useQueryClient();
+  const bgColor = useColorModeValue("ui.light", "ui.dark");
+  const textColor = useColorModeValue("ui.dark", "ui.light");
+  const secBgColor = useColorModeValue("ui.secondary", "ui.darkSlate");
+  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
-    logout()
-  }
+    logout();
+  };
 
   return (
     <>
@@ -52,7 +51,9 @@ const Sidebar = () => {
           <DrawerBody py={8}>
             <Flex flexDir="column" justify="space-between">
               <Box>
-                <Image src={Logo} alt="logo" p={6} />
+                <Heading size="" color="ui.main" textAlign="center" mb={2} p={6}>
+                  肺部结节检测系统
+                </Heading>
                 <SidebarItems onClose={onClose} />
                 <Flex
                   as="button"
@@ -68,7 +69,7 @@ const Sidebar = () => {
               </Box>
               {currentUser?.email && (
                 <Text color={textColor} noOfLines={2} fontSize="sm" p={2}>
-                  Logged in as: {currentUser.email}
+                  以: {currentUser.email}登录
                 </Text>
               )}
             </Flex>
@@ -93,7 +94,9 @@ const Sidebar = () => {
           borderRadius={12}
         >
           <Box>
-            <Image src={Logo} alt="Logo" w="180px" maxW="2xs" p={6} />
+            <Heading size="" color="ui.main" textAlign="center" mb={2}>
+              肺部结节检测系统
+            </Heading>
             <SidebarItems />
           </Box>
           {currentUser?.email && (
@@ -104,13 +107,13 @@ const Sidebar = () => {
               p={2}
               maxW="180px"
             >
-              Logged in as: {currentUser.email}
+              以: {currentUser.email}登录
             </Text>
           )}
         </Flex>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

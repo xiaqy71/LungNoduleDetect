@@ -2,24 +2,24 @@ import type { ApiError } from "./client"
 
 export const emailPattern = {
   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-  message: "Invalid email address",
+  message: "邮箱格式非法",
 }
 
 export const namePattern = {
   value: /^[A-Za-z\s\u00C0-\u017F]{1,30}$/,
-  message: "Invalid name",
+  message: "名字非法",
 }
 
 export const passwordRules = (isRequired = true) => {
   const rules: any = {
     minLength: {
       value: 8,
-      message: "Password must be at least 8 characters",
+      message: "密码长度不得少于8字符",
     },
   }
 
   if (isRequired) {
-    rules.required = "Password is required"
+    rules.required = "密码是必填项"
   }
 
   return rules

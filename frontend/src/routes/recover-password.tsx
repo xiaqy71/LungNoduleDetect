@@ -6,18 +6,18 @@ import {
   Heading,
   Input,
   Text,
-} from "@chakra-ui/react"
-import { useMutation } from "@tanstack/react-query"
-import { createFileRoute, redirect } from "@tanstack/react-router"
-import { type SubmitHandler, useForm } from "react-hook-form"
+} from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { type SubmitHandler, useForm } from "react-hook-form";
 
-import { type ApiError, LoginService } from "../client"
-import { isLoggedIn } from "../hooks/useAuth"
-import useCustomToast from "../hooks/useCustomToast"
-import { emailPattern, handleError } from "../utils"
+import { type ApiError, LoginService } from "../client";
+import { isLoggedIn } from "../hooks/useAuth";
+import useCustomToast from "../hooks/useCustomToast";
+import { emailPattern, handleError } from "../utils";
 
 interface FormData {
-  email: string
+  email: string;
 }
 
 export const Route = createFileRoute("/recover-password")({
@@ -26,10 +26,10 @@ export const Route = createFileRoute("/recover-password")({
     if (isLoggedIn()) {
       throw redirect({
         to: "/",
-      })
+      });
     }
   },
-})
+});
 
 function RecoverPassword() {
   const {
@@ -37,14 +37,14 @@ function RecoverPassword() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>()
-  const showToast = useCustomToast()
+  } = useForm<FormData>();
+  const showToast = useCustomToast();
 
   const recoverPassword = async (data: FormData) => {
     await LoginService.recoverPassword({
       email: data.email,
-    })
-  }
+    });
+  };
 
   const mutation = useMutation({
     mutationFn: recoverPassword,
@@ -52,18 +52,18 @@ function RecoverPassword() {
       showToast(
         "Email sent.",
         "We sent an email with a link to get back into your account.",
-        "success",
-      )
-      reset()
+        "success"
+      );
+      reset();
     },
     onError: (err: ApiError) => {
-      handleError(err, showToast)
+      handleError(err, showToast);
     },
-  })
+  });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    mutation.mutate(data)
-  }
+    mutation.mutate(data);
+  };
 
   return (
     <Container
@@ -77,11 +77,9 @@ function RecoverPassword() {
       centerContent
     >
       <Heading size="xl" color="ui.main" textAlign="center" mb={2}>
-        Password Recovery
+        密码找回
       </Heading>
-      <Text align="center">
-        A password recovery email will be sent to the registered account.
-      </Text>
+      <Text align="center">密码恢复电子邮件将发送到注册账户。</Text>
       <FormControl isInvalid={!!errors.email}>
         <Input
           id="email"
@@ -100,5 +98,5 @@ function RecoverPassword() {
         Continue
       </Button>
     </Container>
-  )
+  );
 }
