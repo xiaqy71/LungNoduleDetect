@@ -82,6 +82,8 @@ services:
       - SENTRY_DSN=${SENTRY_DSN}
       - MINIO_ROOT_USER=${MINIO_ROOT_USER?Variable not set}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD?Variable not set}
+      - MINIO_SERVER=minio
+      - REDIS_SERVER=redis-container
 
   backend:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
@@ -121,7 +123,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
       - SENTRY_DSN=${SENTRY_DSN}
-
+      - MINIO_SERVER=minio
+      - REDIS_SERVER=redis-container
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/utils/health-check/"]
       interval: 10s
@@ -187,13 +190,11 @@ services:
     env_file:
       - .env
     environment:
+      - MINIO_SERVER_URL=http://localhost:9000
       - MINIO_ROOT_USER=${MINIO_ROOT_USER?Variable not set}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD?Variable not set}
     volumes:
       - minio-data:/data
-    networks:
-      - traefik-public
-      - default
     command: server /data --console-address ":9001"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
@@ -207,9 +208,6 @@ services:
     restart: always
     ports:
       - "6379:6379"
-    networks:
-      - traefik-public
-      - default
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s

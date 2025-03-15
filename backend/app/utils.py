@@ -128,7 +128,7 @@ def verify_password_reset_token(token: str) -> str | None:
 
 # 创建一个MinioClient对象
 minio_client = Minio(
-    settings.MINIO_HOST + ":" + str(settings.MINIO_PORT),
+    settings.MINIO_SERVER + ":" + str(settings.MINIO_PORT),
     access_key=settings.MINIO_ROOT_USER,
     secret_key=settings.MINIO_ROOT_PASSWORD,
     secure=False,
@@ -161,6 +161,7 @@ def generate_presigned_url(bucket: MinioBucket, file_name: str, expires: int=360
             file_name,
             timedelta(seconds=expires),
         )
+
     except Exception as e:
         logger.error(f"Error generating presigned url for file {file_name}: {e}")
         return ""

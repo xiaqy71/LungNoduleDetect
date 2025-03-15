@@ -31,7 +31,7 @@ async def lifespan(app: APIRouter):
     )
     global redis
     redis = await aioredis.from_url(
-        "redis://localhost", encoding="utf-8", decode_responses=True
+        "redis://"+settings.REDIS_SERVER, encoding="utf-8", decode_responses=True
     )
     yield
     detector = None

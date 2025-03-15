@@ -124,8 +124,10 @@ class Settings(BaseSettings):
     
     MINIO_ROOT_USER: str
     MINIO_ROOT_PASSWORD: str
-    MINIO_HOST: str = "localhost"
+    MINIO_SERVER: str
     MINIO_PORT: int = 9000
+    
+    REDIS_SERVER: str
 
 
 settings = Settings()  # type: ignore
